@@ -1,0 +1,52 @@
+{
+  "name": "mxgraphdata",
+  "version": "0.1.0",
+  "description": "mxGraph CODEC and File library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": "https://github.com/Sciumo/mxgraphdata",
+  "author": "Eric Lindahl <eric@sciumo.com>",
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@types/he": "^1.1.1",
+    "@types/jsonata": "^1.5.1",
+    "@types/pako": "^1.0.1",
+    "fast-xml-parser": "^3.17.4",
+    "he": "^1.2.0",
+    "jsonata": "^1.8.3",
+    "pako": "^1.0.11",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/jest": "^26.0.10",
+    "@types/node": "^14.6.0",
+    "jest": "^26.4.0",
+    "ts-jest": "^26.2.0",
+    "ts-loader": "^8.0.2",
+    "ts-node": "^8.10.2",
+    "tslib": "^2.0.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "scripts": {
+    "build": "webpack",
+    "test": "jest",
+    "prepublishOnly": "webpack --mode=production"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testRegex": "(/tests/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "verbose": true
+  }
+}

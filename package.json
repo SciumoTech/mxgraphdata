@@ -1,13 +1,13 @@
 {
   "name": "mxgraphdata",
-  "version": "0.1.0",
-  "description": "mxGraph CODEC and File library",
-  "main": "dist/index.js",
+  "version": "0.1.1",
+  "description": "mxGraph Draw.IO Reader and JSON Model",
+  "main": "dist/mxgraphdata.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "repository": "https://github.com/Sciumo/mxgraphdata",
+  "repository": "https://github.com/SciumoTech/mxgraphdata",
   "author": "Eric Lindahl <eric@sciumo.com>",
   "license": "Apache-2.0",
   "private": false,

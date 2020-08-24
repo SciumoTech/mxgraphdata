@@ -8,10 +8,12 @@ import {
   isMxGraphModel,
   MxData,
   isShapes,
+  MxGraphD,
+  Style
 } from "../src/index";
 import { readFileSync } from "fs";
-import { Style } from "../src/interfaces/style";
-import { MxGraphD } from "../src/mxgraphd";
+
+
 
 const mxfiles = [
   "./data/cisco1.drawio",
@@ -86,7 +88,6 @@ describe("parseDrawIO() GraphModel", () => {
   });
 });
 
-
 describe("MxGraphD", () => {
   mxfiles.forEach((file) => {
     test(`parse ${file}`, async (done) => {
@@ -101,33 +102,35 @@ describe("MxGraphD", () => {
       var graphd = new MxGraphD(graph);
       expect(graphd.cellsById).toBeDefined();
       expect(graphd.cellsById.size).toBeGreaterThan(0);
-      graphd.links.forEach( link => {
+      graphd.links.forEach((link) => {
         var src = link._source;
-        if( src ){
-          expect( graphd.linksFrom.has(src) ).toBeTruthy();
+        if (src) {
+          expect(graphd.linksFrom.has(src)).toBeTruthy();
         }
         var tgt = link._target;
-        if( tgt ){
-          expect( graphd.linksTo.has(tgt) ).toBeTruthy();
+        if (tgt) {
+          expect(graphd.linksTo.has(tgt)).toBeTruthy();
         }
       });
       done();
     });
   });
 });
-        
+
 /**
  * Test for Shapes stencil content.
  */
 describe("parseDrawIO() Shapes", () => {
   const file = "./data/stencils.xml";
-  console.warn(" * fast-xml-parser does *not* preserve order and so is not suitable for stencils.");
-    test(`parse ${file}`, async () => {
-      const drawio = readFileSync(file, { encoding: "utf8", flag: "r" });
-      const result: MxData = await parseDrawIO(drawio);
-      expect(result).toBeDefined();
-      if (isShapes(result)) {
-        expect(result.shape).toBeDefined();
-      } 
-    });
+  console.warn(
+    " * fast-xml-parser does *not* preserve order and so is not suitable for stencils."
+  );
+  test(`parse ${file}`, async () => {
+    const drawio = readFileSync(file, { encoding: "utf8", flag: "r" });
+    const result: MxData = await parseDrawIO(drawio);
+    expect(result).toBeDefined();
+    if (isShapes(result)) {
+      expect(result.shape).toBeDefined();
+    }
   });
+});

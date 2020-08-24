@@ -5,13 +5,17 @@
 import { mxGraph, mxGraphModel, mxCell } from "./";
 import jsonata from "jsonata";
 
-export function addMMap( cell : mxCell, mmap:Map<string, Set<mxCell>>, key: keyof mxCell ) : Set<mxCell> | undefined{
+export function addMMap(
+  cell: mxCell,
+  mmap: Map<string, Set<mxCell>>,
+  key: keyof mxCell
+): Set<mxCell> | undefined {
   var id = cell[key] as string;
-  if( !id ){
+  if (!id) {
     return undefined;
   }
   var mset = mmap.get(id);
-  if( !mset ){
+  if (!mset) {
     mset = new Set();
     mmap.set(id, mset);
   }
@@ -63,16 +67,16 @@ export class MxGraphD implements mxGraph {
     var cells = (this.cells = this.model.root.mxCell);
     var nodes = this.nodes;
     var links = this.links;
-    var linkF = this.linksFrom
-    var linkT = this.linksTo
+    var linkF = this.linksFrom;
+    var linkT = this.linksTo;
     for (var idx = 0; idx < cells.length; idx++) {
       const cell = cells[idx];
       this.cellsById.set(cell._id, cell);
-      if( cell._edge ){
+      if (cell._edge) {
         links.push(cell);
-        addMMap( cell, linkF, "_source");
-        addMMap( cell, linkT, "_target");
-      }else{
+        addMMap(cell, linkF, "_source");
+        addMMap(cell, linkT, "_target");
+      } else {
         nodes.push(cell);
       }
     }

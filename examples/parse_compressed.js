@@ -4,7 +4,7 @@
  */
 global.pako = require("pako");
 
-var mxd = require( "../dist/mxgraphd");
+var mxd = require( "../dist/mxgraphdata");
 var fs = require("fs");
 
 var fname = "./data/cisco1.drawio";

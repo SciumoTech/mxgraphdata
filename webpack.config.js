@@ -23,7 +23,7 @@ module.exports = {
     globalObject: "this",
     library : 'mxgraphdata',
     libraryTarget : 'umd',
-    filename: 'mxgraphd.js',
+    filename: 'mxgraphdata.js',
     path: path.resolve(__dirname, 'dist'),
   },
 };

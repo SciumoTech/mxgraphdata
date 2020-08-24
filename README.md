@@ -7,7 +7,7 @@ Also provides simple Typescript interfaces and an indexing data model for search
 
 *You must include Pako*
 
-``js
+```javascript
 /**
  * Externals:
  * You must add these to your application.
@@ -24,11 +24,12 @@ mxd.parseDrawIO(drawfile).then( (mxfile) => {
   console.log("MXFile version:", mxfile._version );
   console.log("Diagram name:", mxfile.diagram._name );
 });
-``
+```
 
-``bash
+Usage:
+```bash
 node ./examples/parse_compressed.js 
 MXFile name: ./data/cisco1.drawio
 MXFile version: 13.6.0
 Diagram name: Page-1
-``
+```

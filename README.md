@@ -1,7 +1,7 @@
 mxGraph Draw.IO File Parser and JSON Data Model
 ===
 
-Parses [Draw.io or diagrams.net](diagrams.net) file that may be compressed into pure JSON.
+Parses [Draw.io or diagrams.net](http://diagrams.net) file that may be compressed into pure JSON.
 
 Also provides simple Typescript interfaces and an indexing data model for searching the graph model.
 

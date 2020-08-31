@@ -1,15 +1,13 @@
 import {
   parseDrawIO,
-  mxfile,
   parseDictionary,
-  DEFAULT_OPTIONS,
   mxGraphModel,
   isMxFile,
-  isMxGraphModel,
   MxData,
   isShapes,
   MxGraphD,
-  Style
+  Style,
+  Shapes
 } from "../src/index";
 import { readFileSync } from "fs";
 
@@ -62,7 +60,7 @@ describe("parseDrawIO() GraphModel", () => {
       expect(root.mxCell.length).toBeGreaterThan(0);
       var cells = root.mxCell;
       var cell = cells[0];
-      expect(cell._id).toBe("0");
+      expect(cell._id).toBe(0);
       for (var idx = 0; idx < cells.length; idx++) {
         cell = cells[idx];
         if (cell.mxGeometry) {
@@ -118,19 +116,27 @@ describe("MxGraphD", () => {
 });
 
 /**
- * Test for Shapes stencil content.
+ * Test for Shapes ordered stencil content.
  */
 describe("parseDrawIO() Shapes", () => {
   const file = "./data/stencils.xml";
-  console.warn(
-    " * fast-xml-parser does *not* preserve order and so is not suitable for stencils."
-  );
   test(`parse ${file}`, async () => {
     const drawio = readFileSync(file, { encoding: "utf8", flag: "r" });
     const result: MxData = await parseDrawIO(drawio);
     expect(result).toBeDefined();
-    if (isShapes(result)) {
-      expect(result.shape).toBeDefined();
-    }
+    expect(isShapes(result)).toBeTruthy();
+    var shapes = result as Shapes;
+    expect(shapes.shape.length).toBeGreaterThan(0);
+    var shape = shapes.shape[0];
+    expect(shape).toBeDefined();
+    expect(shape!.background).toBeDefined();
+    expect(shape.background!.path).toBeDefined();
+    expect(shape.background!.path!.__elements).toBeDefined();
+    var cmds = shape!.background!.path!.__elements!;
+    expect(cmds.length).toBeGreaterThan(3);
+    expect(cmds[0]).toEqual({move: { _x:0, _y:0}});
+    expect(cmds[1]).toEqual({quad: { _x1:100, _y1:0, _x2:100, _y2:50}});
+    expect(cmds[2]).toEqual({quad: { _x1:100, _y1:100, _x2:0, _y2:100}});
+    expect(cmds[3]).toEqual({close: {}});
   });
 });

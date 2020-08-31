@@ -1,17 +1,17 @@
 import { mxfile, isMxFile } from "./interfaces/mxfile";
 import { diagram, isDiagramDeflated } from "./interfaces/diagram";
-import { MxGraphD } from "./mxgraphd";
-import { parse, X2jOptionsOptional } from "fast-xml-parser";
+import { orderedxml2json } from "xmljsonkit";
 import { inflateRaw } from "pako";
-import { mxGraphModel, isMxGraphModel } from "./interfaces/mxgraphmodel";
+import { mxGraphModel } from "./interfaces/mxgraphmodel";
 import { decode as hedecode } from "he";
-import { INSPECT_MAX_BYTES } from "buffer";
 import { Shapes } from "./interfaces/shape";
 
 export type TagProcessor = (tagValue: string, tagName: string) => string;
 export type AttrProcessor = (attrValue: string, attrName: string) => string;
 
 export type MxData  = mxfile | mxGraphModel | Shapes;
+
+export var ORDERED_FIELDS = ["path"];
 
 /**
  * Decompose dictionary string as Object
@@ -79,34 +79,16 @@ export function mxAttrProcessor(attrValue: string, attrName: string): string {
   return attrValue;
 }
 
-export const DEFAULT_OPTIONS: X2jOptionsOptional = {
-  attributeNamePrefix: "_",
-  ignoreAttributes: false,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: true,
-  attrValueProcessor: mxAttrProcessor,
-};
-
-/**
- * Preserver array order
- */
-export const DEFAULT_ARRAY_OPTIONS: X2jOptionsOptional = {
-  attributeNamePrefix: "_",
-  ignoreAttributes: false,
-  ignoreNameSpace: false,
-  allowBooleanAttributes: true,
-  arrayMode: "strict",
-  attrValueProcessor: mxAttrProcessor,
-};
 
 export function decodeMxFile(
   drawIOFile: string,
-  options = DEFAULT_OPTIONS
+  ...ordered:string[]
 ): MxData | null {
   if( !drawIOFile ){
     return null;
   }
-  const json = parse(drawIOFile, (drawIOFile.startsWith("<shapes>") ? DEFAULT_ARRAY_OPTIONS : options) );
+  ordered = [...ordered,...ORDERED_FIELDS]
+  const json = orderedxml2json(drawIOFile, ...ordered);
   if (!json) {
     return null;
   }
@@ -148,14 +130,14 @@ export function decompressDiagram(dia: diagram): any {
  */
 export function decodeGraphModel(
   graphXml: string,
-  options = DEFAULT_OPTIONS
+  ...ordered:string[]
 ): mxGraphModel | undefined {
   /**
    * Result is an XML string which still needs to be parsed
    * into possible mxGraphModel
    */
-
-  var maybeGraphModel = parse(graphXml, options);
+  var ordered = [...ordered,...ORDERED_FIELDS];
+  var maybeGraphModel = orderedxml2json(graphXml, ...ordered);
   if (maybeGraphModel && maybeGraphModel["mxGraphModel"]) {
     var graphModel = maybeGraphModel["mxGraphModel"] as mxGraphModel;
     return graphModel;
@@ -171,10 +153,9 @@ export function decodeGraphModel(
  */
 export async function parseDrawIO(
   drawIOFile: string,
-  options = DEFAULT_OPTIONS,
   clean = true
 ): Promise<MxData> {
-  var mxf = decodeMxFile(drawIOFile, options);
+  var mxf = decodeMxFile(drawIOFile);
   if (!mxf) {
     throw new Error("Malformed Draw.io file.");
   }
@@ -187,7 +168,7 @@ export async function parseDrawIO(
          */
         delete mxf.diagram["#text"];
       }
-      mxf.diagram.graphModel = decodeGraphModel(mxf.diagram.graphXml, options);
+      mxf.diagram.graphModel = decodeGraphModel(mxf.diagram.graphXml);
       if (clean && mxf.diagram.graphModel) {
         /**
          * No longer need possibly large diagram xml.

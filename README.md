@@ -5,6 +5,10 @@ Parses [Draw.io or diagrams.net](http://diagrams.net) file that may be compresse
 
 Also provides simple Typescript interfaces and an indexing data model for searching the graph model.
 
+Draw.io essentially encapsulates a 2D canvas API for drawing stencils and graphs, so graphics commands and command serialization is a significant part of the Draw.io XML serialization.
+
+Order is important for graphics commands therefore it is import that the JSON translation maintains the XML element order.
+
 *You must include Pako*
 
 ```javascript
